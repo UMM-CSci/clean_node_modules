@@ -54,23 +54,27 @@ function roll_back_acces_time() {
 # When we clone this repo it won't have the desired access times
 # for the "old" `node_modules` directories, so we'll have to use
 # `touch` in `setup()` to set those to desired values.
+
+# There are several commands here that generate a lot of "chatter"
+# on the output (`pushd`, `popd`, `git clone`) so various things
+# are done to quiet them down or (if quiet wasn't possible) swallow
+# the output.
 function setup() {
     TEST_TEMP_DIR="$(temp_make)"
+    echo "# Temp directory: $TEST_TEMP_DIR" >&3
     BATSLIB_FILE_PATH_REM="#${TEST_TEMP_DIR}"
     BATSLIB_FILE_PATH_ADD='<temp>'
     BATSLIB_TEMP_PRESERVE_ON_FAILURE=1
 
-    pushd "$TEST_TEMP_DIR" || exit 1
-    git clone https://github.com/UMM-CSci/clean-node-modules-test-repo.git
+    pushd "$TEST_TEMP_DIR" &> /dev/null || exit 1 
+    git clone --quiet https://github.com/UMM-CSci/clean-node-modules-test-repo.git
     cd clean-node-modules-test-repo || exit 1
     npm_install 'old_ignored_node_modules'
     npm_install 'old_not_ignored_node_modules'
     npm_install 'new_ignored_node_modules'
-    roll_back_acces_time 'old_ignored_node_modules';
-    roll_back_acces_time 'old_not_ignored_node_modules';
-    touch -a --date="last year" old_ignored_node_modules/node_modules
-    touch -a --date="last year" old_not_ignored_node_modules/node_modules
-    popd || exit 1
+    roll_back_acces_time 'old_ignored_node_modules/node_modules'
+    roll_back_acces_time 'old_not_ignored_node_modules/node_modules'
+    popd &> /dev/null || exit 1
 }
 
 function teardown() {
