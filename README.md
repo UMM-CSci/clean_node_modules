@@ -101,3 +101,22 @@ fatal: Not a git repository (or any parent up to mount point /)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 ```
 
+## Future features
+
+We should have a `--dry-run` option that lists
+
+- All the `node_modules` directories that will be deleted
+- All the `node_modules` directories it's skipping, with info on why
+
+(This could be fancied up with additional flags, but just reporting
+everything would do for starters.)
+
+Maybe a flag to list `--not-ignored` and `--too-new`, and maybe a
+`--summary` flag.
+
+Maybe a `--interactive` that shows you how many directories it will delete
+and ask for confirmation. Or maybe that should be the default, and we
+instead have a `--force` flag (modelled after `rm`) that skips that step?
+
+Allow people to set the time as an argument, e.g., `--min-age="now"` so they
+can clean up everything at the end of a semester.
