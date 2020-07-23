@@ -15,9 +15,14 @@ PAST_ACCESS_TIME="4 months ago"
 #   0 if the install was successful, non-zero on error.
 #######################################
 function npm_install() {
-    pushd "$1" || exit 1
-    npm install
-    popd || exit 1
+    # The `(...)` returns us back to our current
+    # directory when the `npm install` is done,
+    # avoiding the need for a `pushd/popd` pair.
+    # The `&> /dev/null` swallows _all_ output,
+    # whether to `stdout` or `stderr`; otherwise
+    # `npm install` generated a *lot* of distracting
+    # chatter.
+    (cd "$1" && exec npm install &> /dev/null)
 }
 
 #######################################
