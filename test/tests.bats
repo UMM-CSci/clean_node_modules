@@ -53,20 +53,14 @@ function setup() {
     TEST_TEMP_DIR="$(temp_make)"
     BATSLIB_FILE_PATH_REM="#${TEST_TEMP_DIR}"
     BATSLIB_FILE_PATH_ADD='<temp>'
-
-    echo "# $TEST_TEMP_DIR" >&3
     BATSLIB_TEMP_PRESERVE_ON_FAILURE=1
 
     pushd "$TEST_TEMP_DIR" || exit 1
     git clone https://github.com/UMM-CSci/clean-node-modules-test-repo.git
-    echo 'We have cloned' >&3
     cd clean-node-modules-test-repo || exit 1
     npm_install 'old_ignored_node_modules'
-    echo 'Installed in first module' >&3
     npm_install 'old_not_ignored_node_modules'
-    echo 'Installed in second module' >&3
     npm_install 'new_ignored_node_modules'
-    echo 'Installed in third module' >&3
     roll_back_acces_time 'old_ignored_node_modules';
     roll_back_acces_time 'old_not_ignored_node_modules';
     touch -a --date="last year" old_ignored_node_modules/node_modules
