@@ -120,3 +120,13 @@ instead have a `--force` flag (modelled after `rm`) that skips that step?
 
 Allow people to set the time as an argument, e.g., `--min-age="now"` so they
 can clean up everything at the end of a semester.
+
+Should this be generalized to finding and deleting all things that are old and
+ignored by `git`? That would include things like `.class` and `.o` files,
+generated executables, etc. That might be a nice generalization of this that
+would make it more useful/interesting to a broader audience without completely
+rewriting an existing command. We probably wouldn't want to look for all "old"
+files and then see if they're ignored by `git`. Maybe a better approach would
+be to find all `.git` files, and then search for old, ignored files in those
+repositories? It sounds like it would be pretty computationally slow, though,
+on a large directory structure.
